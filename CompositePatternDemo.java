@@ -1,12 +1,12 @@
 import java.util.ArrayList;
 import java.util.List;
 
-// Component
+// Component interface
 interface HousingStructure {
     void display();
 }
 
-// Leaf
+// Leaf class
 class Room implements HousingStructure {
     private String name;
 
@@ -20,7 +20,31 @@ class Room implements HousingStructure {
     }
 }
 
-// Composite
+// Composite class
+class Floor implements HousingStructure {
+    private String name;
+    private List<HousingStructure> structures = new ArrayList<>();
+
+    public Floor(String name) {
+        this.name = name;
+    }
+
+    public void addStructure(HousingStructure structure) {
+        structures.add(structure);
+    }
+
+    @Override
+    public void display() {
+        System.out.println("Floor: " + name);
+        System.out.println("Contains the following rooms:");
+        for (HousingStructure structure : structures) {
+            structure.display();
+        }
+        System.out.println();
+    }
+}
+
+// Composite class (building)
 class Building implements HousingStructure {
     private String name;
     private List<HousingStructure> structures = new ArrayList<>();
@@ -33,13 +57,10 @@ class Building implements HousingStructure {
         structures.add(structure);
     }
 
-    public void removeStructure(HousingStructure structure) {
-        structures.remove(structure);
-    }
-
-    @Overridehh
+    @Override
     public void display() {
         System.out.println("Building: " + name);
+        System.out.println("Contains the following floors:");
         for (HousingStructure structure : structures) {
             structure.display();
         }
@@ -48,26 +69,25 @@ class Building implements HousingStructure {
 
 public class CompositePatternDemo {
     public static void main(String[] args) {
-        // Create individual rooms
-        HousingStructure room1 = new Room("Living Room");
-        HousingStructure room2 = new Room("Kitchen");
-        HousingStructure room3 = new Room("Bedroom");
-        HousingStructure room4 = new Room("Bathroom");
+        // Create rooms
+        Room room1 = new Room("Bedroom");
+        Room room2 = new Room("Living Room");
+        Room room3 = new Room("Kitchen");
 
-        // Create a building and add rooms to it
-        Building house = new Building("My House");
-        house.addStructure(room1);
-        house.addStructure(room2);
-        house.addStructure(room3);
+        // Create floors and add rooms to them
+        Floor floor1 = new Floor("First Floor");
+        floor1.addStructure(room1);
+        floor1.addStructure(room2);
 
-        // Create another building
-        Building apartment = new Building("Apartment");
-        apartment.addStructure(room4);
+        Floor floor2 = new Floor("Second Floor");
+        floor2.addStructure(room3);
 
-        // Add the apartment to the house
-        house.addStructure(apartment);
+        // Create a building and add floors to it
+        Building building = new Building("My House");
+        building.addStructure(floor1);
+        building.addStructure(floor2);
 
-        // Display the entire building hierarchy
-        house.display();
+        // Display the building structure
+        building.display();
     }
 }
